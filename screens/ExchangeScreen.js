@@ -2,15 +2,38 @@ import React, { Component } from 'react';
 import { Alert, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native';
 import db from '../config'
 import HomeScreen from './HomeScreen'
+import firebase from 'firebase'
 
 export default class ExchangeScreen extends Component {
     constructor() {
         super()
         this.state = {
+            userId: firebase.auth().currentUser.email,
             username: '',
             itemName: '',
-            description: ''
+            description: '',
+            exchangeId: ''
         }
+    }
+    createUniqueId() {
+        return Math.random().toString(36).substring(7);
+    }
+    addItems = () => {
+        var userId = this.state.userId
+        var randomRequestId = this.createUniqueId()
+        db.collection('requested_books').add({
+            "user_id": userId,
+            "book_name": bookName,
+            "reason_to_request": reasonToRequest,
+            "request_id": randomRequestId,
+        })
+
+        this.setState({
+            bookName: '',
+            reasonToRequest: ''
+        })
+
+        return Alert.alert("Book Requested Successfully")
     }
     addItem = (itemName, description) => {
         var username = this.state.username
